@@ -4,3 +4,8 @@ Modified https://github.com/sebadob/rauthy-pam-nss to inlcude Arch. suport for D
 
 ## Features
 - supports both Rauthy managed users and local ones (including homed)
+
+## Useage
+1. clone repo ``git clone https://github.com/deathblade666/rauthy-pam-nss-arch``
+2. run the install nss (Must be run as root) ``sudo ./install.sh nss`` then follow the prompts\
+3. install PAM module ``sudo ./install.sh pam``
