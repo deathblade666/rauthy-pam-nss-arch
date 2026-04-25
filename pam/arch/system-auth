@@ -1,0 +1,32 @@
+#%PAM-1.0
+
+# --- AUTHENTICATION ---
+# Try homed first
+auth      sufficient  pam_systemd_home.so
+# Try Rauthy. 'sufficient' means if this works, we are DONE.
+auth      sufficient  pam_rauthy.so
+# Fallback to local files.
+auth      required    pam_unix.so try_first_pass nullok
+auth      required    pam_env.so
+
+# --- ACCOUNT ---
+# We must allow the account phase to succeed even if the user is not in /etc/passwd
+account   sufficient  pam_systemd_home.so
+# Change this from 'required' to 'sufficient'
+account   sufficient  pam_unix.so
+# Add Rauthy here so it can validate the managed account status
+account   sufficient  pam_rauthy.so
+account   required    pam_permit.so
+
+# --- PASSWORD ---
+password  optional    pam_rauthy.so
+password  required    pam_unix.so try_first_pass nullok sha512 shadow
+
+# --- SESSION ---
+session   optional    pam_loginuid.so
+session   required    pam_limits.so
+session   required    pam_unix.so
+session   optional    pam_systemd_home.so
+session   optional    pam_systemd.so
+# Rauthy session handles home dir creation for managed users
+session   optional    pam_rauthy.so
