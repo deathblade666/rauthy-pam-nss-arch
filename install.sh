@@ -31,8 +31,9 @@ is_root() {
 }
 
 createConfig () {
+  CONFIG_PATH="$HOME/.config/rauthy-pam-nss/config"
   echo "Creating Rauthy configuration..."
-  mkdir /etc/rauthy
+  mkdir -p /etc/rauthy
   chmod 0600 /etc/rauthy
   if test -f /etc/rauthy/rauthy-pam-nss.toml; then
       mv /etc/rauthy/rauthy-pam-nss.toml /etc/rauthy/rauthy-pam-nss.toml.$(date +%s)
@@ -41,16 +42,20 @@ createConfig () {
   cp "$ROOT"/rauthy-pam-nss.toml /etc/rauthy/
   chmod 0600 /etc/rauthy/rauthy-pam-nss.toml
 
-  read -p "Rauthy URL (e.g. https://auth.example.com): " URL
-  read -p "Rauthy Host ID: " ID
-  read -s -p "Rauthy Host Secret: " SECRET; echo
+  if [ -f "$CONFIG_PATH" ]; then
+    source "$CONFIG_PATH"
+  else
+    read -p "Rauthy URL (e.g. https://auth.example.com): " URL
+    read -p "Rauthy Host ID: " ID
+    read -s -p "Rauthy Host Secret: " SECRET; echo
+  fi
 
   URL_ESC=$(echo "$URL" | sed -e 's/\//\\\//g')
   sed -i "s/{{ rauthy_url }}/$URL_ESC/g" /etc/rauthy/rauthy-pam-nss.toml
   sed -i "s/{{ rauthy_host_id }}/$ID/g" /etc/rauthy/rauthy-pam-nss.toml
   sed -i "s/{{ rauthy_host_secret }}/$SECRET/g" /etc/rauthy/rauthy-pam-nss.toml
 
-  mkdir /var/lib/pam_rauthy
+  mkdir -p /var/lib/pam_rauthy
   cp "$ROOT"/session_scripts/session_* /var/lib/pam_rauthy/
   chmod 700 /var/lib/pam_rauthy/session_*
 

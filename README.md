@@ -4,6 +4,7 @@ Modified https://github.com/sebadob/rauthy-pam-nss to inlcude Arch. suport for D
 
 ## Features
 - supports both Rauthy managed users and local ones (including homed)
+- parse config variables from file to allow incorporation in other scripts while retaining the ability to run stand-alone
 
 ## Useage
 1. clone repo ``git clone https://github.com/deathblade666/rauthy-pam-nss-arch``
