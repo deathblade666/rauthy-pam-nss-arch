@@ -149,6 +149,12 @@ installPAM () {
   echo "PAM Installation Complete."
 }
 
+enableSudo() {
+  echo "%wheel-rauthy ALL=(ALL) ALL" > /etc/sudoers.d/wheel-rauthy
+  chmod 440 /etc/sudoers.d/wheel-rauthy
+  chown root:root /etc/sudoers.d/wheel-rauthy
+}
+
 # --- Execution ---
 is_root
 
@@ -156,6 +162,7 @@ case "${1:-}" in
   nss)
     createConfig
     installNSS
+    enableSudo
     ;;
   pam)
     installPAM
